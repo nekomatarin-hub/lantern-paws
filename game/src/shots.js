@@ -67,6 +67,16 @@ function arrangeClearScene(world) {
   world.cat.x = 640;
   world.cat.y = 430;
   world.cat.carried = 0;
+  // Pose the glooms spread around the garden instead of in their spawn
+  // cluster, so the clear moment reads at thumbnail size too.
+  const spots = [
+    [300, 300], [980, 290], [330, 570], [960, 560], [620, 235], [1090, 430],
+  ];
+  world.glooms.forEach((g, i) => {
+    const [x, y] = spots[i % spots.length];
+    g.x = x;
+    g.y = y;
+  });
   world.state = 'waveclear';
   world.waveClearT = 2.2;
   for (const l of world.lanterns) {
@@ -86,10 +96,15 @@ function arrangeEndScene(world) {
   world.starsLitTotal = 17;
   world.bumpsTotal = 23;
   world.bannerT = 0;
+  // Below the results panel, not behind it: on the end screen the hero
+  // should be visible celebrating, with the lit garden all around.
   world.cat.x = 640;
-  world.cat.y = 470;
+  world.cat.y = 614;
   world.cat.carried = 0;
   world.state = 'victory';
+  for (const l of world.lanterns) {
+    burst(world.particles, l.x, l.y - 20, '#ffd94d', 14, 200, 1.2, world.rng);
+  }
 }
 
 export function setupShot(world, name, seed = 7) {
